@@ -1,0 +1,30 @@
+<cms = 'http://www.enonic.com/cms'>
+[cms:base] > nt:base
+
+[cms:principal] > cms:base abstract
+- cms:displayname (string)
+
+[cms:user] > cms:principal
+
+[cms:group] > cms:principal
++ members (cms:users) multiple
+
+[cms:role] > cms:group
+
+[cms:userstore] > cms:base
++ roles (cms:roles)
++ groups (cms:groups) mandatory
++ users (cms:users) mandatory
+
+[cms:userstores] > cms:base
++ system (cms:userstore)
++ * (cms:userstore)
+
+[cms:users] > cms:base
++ * (cms:user)
+
+[cms:groups] > cms:base
++ * (cms:group)
+
+[cms:roles] > cms:base
++ * (cms:role)
