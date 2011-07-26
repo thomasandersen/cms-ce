@@ -93,6 +93,8 @@ public final class JcrBootstrap
 
             createTreeStructure( jcrSession );
 
+            jcrSession.save();
+
             print( jcrSession );
         }
         catch ( Exception e )
@@ -114,6 +116,10 @@ public final class JcrBootstrap
     {
         Node root = jcrSession.getRootNode();
 
+        if (root.hasNode( "enonic" )) {
+            LOG.info( "Skipping JCR tree structure initialization" );
+            return;
+        }
         Node enonic = root.addNode( "enonic", "nt:unstructured" );
         Node userstores = enonic.addNode( "userstores", "cms:userstores" );
 

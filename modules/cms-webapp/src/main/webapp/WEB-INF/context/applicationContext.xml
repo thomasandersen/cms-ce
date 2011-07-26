@@ -58,10 +58,18 @@
     <property name="allowCreate" value="true"/>
   </bean>
 
-  <!--<bean id="userjcrDao" class="com.enonic.cms.core.jcr.AccountDaoJcrImpl">-->
-  <!--<property name="sessionFactory" ref="jcrSessionFactory"/>-->
-  <!--<property name="template" ref="jcrTemplate"/>-->
-  <!--</bean>-->
+  <bean id="userjcrDao" class="com.enonic.cms.core.jcr.AccountDaoJcrImpl">
+    <property name="sessionFactory" ref="jcrSessionFactory"/>
+    <property name="template" ref="jcrTemplate"/>
+  </bean>
+
+  <!--bean id="jcrService" parent="txProxyTemplate">
+    <property name="target">
+      <bean class="com.enonic.cms.core.jcr.AccountDaoJcrImpl">
+        <property name="template" ref="jcrTemplate"/>
+      </bean>
+    </property>
+  </bean-->
 
   <bean id="jcrBootstrap" class="com.enonic.cms.core.jcr.JcrBootstrap">
     <property name="sessionFactory" ref="jcrSessionFactory"/>
@@ -93,14 +101,6 @@
         <prop key="save\*">PROPAGATION_REQUIRED</prop>
         <prop key="\*">PROPAGATION_REQUIRED, readOnly</prop>
       </props>
-    </property>
-  </bean>
-
-  <bean id="jcrService" parent="txProxyTemplate">
-    <property name="target">
-      <bean class="com.enonic.cms.core.jcr.AccountDaoJcrImpl">
-        <property name="template" ref="jcrTemplate"/>
-      </bean>
     </property>
   </bean>
 
