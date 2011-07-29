@@ -17,8 +17,50 @@
 
     <properties>
         <distribution.repo>inhouse</distribution.repo>
+        <jslint4java.version>2.0.0</jslint4java.version>
     </properties>
 
+    <build>
+        <plugins>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-antrun-plugin</artifactId>
+              <version>1.6</version>
+              <executions>
+                <execution>
+                  <phase>compile</phase>
+                  <goals>
+                    <goal>run</goal>
+                  </goals>
+                  <configuration>
+                    <target>
+                      <taskdef name="jslint" classname="com.googlecode.jslint4java.ant.JSLintTask"
+                         classpath="${settings.localRepository}/com/googlecode/jslint4java/jslint4java-ant/${jslint4java.version}/jslint4java-ant-${jslint4java.version}.jar" />
+
+                      <!-- See JSLint option list:  http://www.jslint.com/lint.html#options -->
+                      <jslint options="browser,devel,plusplus,white,sloppy,vars,confusion"
+                              haltOnFailure="false" >
+                          <predef>Ext,Utils,CMS</predef>
+                          <formatter type="plain" />
+                          <fileset dir="${basedir}/src/main/webapp/admin"
+                                   includes="**/*.js"
+                                   excludes="**/ext-all-debug.js,**/ext-all.js" />
+                      </jslint>
+                    </target>
+                  </configuration>
+                </execution>
+              </executions>
+              <dependencies>
+                <dependency>
+                  <groupId>com.googlecode.jslint4java</groupId>
+                  <artifactId>jslint4java-ant</artifactId>
+                  <version>${jslint4java.version}</version>
+                </dependency>
+              </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+  
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
