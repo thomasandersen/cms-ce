@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.api.core.InjectParam;
 
-import com.enonic.cms.core.jcr.AccountDaoJcrImpl;
+import com.enonic.cms.core.jcr.AccountJcrDao;
 import com.enonic.cms.core.security.user.UserEntity;
 import com.enonic.cms.store.dao.UserDao;
 
@@ -27,7 +27,7 @@ public final class UsersResource
     private UserDao userDao;
 
     @Autowired
-    private AccountDaoJcrImpl userJcrDao;
+    private AccountJcrDao userJcrDao;
 
     @Autowired
     private UserPhotoService photoService;
@@ -36,10 +36,12 @@ public final class UsersResource
     @Path("list")
     public UsersModel getAll( @InjectParam final UserLoadRequest req )
     {
-        userJcrDao.findAll( req.getStart(), req.getLimit(), req.getQuery(), req.getSort() );
+//        final EntityPageList<UserEntity> list =
+//            this.userDao.findAll( req.getStart(), req.getLimit(), req.buildHqlQuery(), req.buildHqlOrder() );
 
         final EntityPageList<UserEntity> list =
-            this.userDao.findAll( req.getStart(), req.getLimit(), req.buildHqlQuery(), req.buildHqlOrder() );
+            userJcrDao.findAll( req.getStart(), req.getLimit(), req.buildHqlQuery(), req.buildHqlOrder() );
+
         return UserModelHelper.toModel( list );
     }
 

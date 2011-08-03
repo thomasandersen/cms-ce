@@ -58,7 +58,12 @@
     <property name="allowCreate" value="true"/>
   </bean>
 
-  <bean id="userjcrDao" class="com.enonic.cms.core.jcr.AccountDaoJcrImpl">
+  <bean id="userjcrDao" class="com.enonic.cms.core.jcr.AccountJcrDao">
+    <property name="sessionFactory" ref="jcrSessionFactory"/>
+    <property name="template" ref="jcrTemplate"/>
+  </bean>
+
+  <bean id="userstorejcrDao" class="com.enonic.cms.core.jcr.UserstoreJcrDao">
     <property name="sessionFactory" ref="jcrSessionFactory"/>
     <property name="template" ref="jcrTemplate"/>
   </bean>
@@ -84,6 +89,8 @@
       </bean>
     </property>
   </bean>
+
+  <bean id="jcrBootstrapImporter" class="com.enonic.cms.core.jcr.JcrBootstrapImporter"/>
 
   <!-- JCR TRANSACTIONS -->
   <bean id="jcrTransactionManager"

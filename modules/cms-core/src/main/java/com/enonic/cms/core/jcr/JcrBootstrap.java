@@ -16,53 +16,46 @@ import javax.jcr.Session;
 import javax.jcr.Workspace;
 import javax.jcr.nodetype.NodeType;
 
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.commons.cnd.CndImporter;
 import org.apache.jackrabbit.commons.cnd.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.extensions.jcr.JcrSessionFactory;
 
 import com.google.common.io.Files;
 
-public final class JcrBootstrap
+import com.enonic.cms.core.security.userstore.UserStoreService;
+import com.enonic.cms.store.dao.UserDao;
+
+public class JcrBootstrap
 {
     private static final Logger LOG = LoggerFactory.getLogger( JcrBootstrap.class );
 
-    private static final String ENONIC_CMS_NAMESPACE = "http://www.enonic.com/cms";
-
-    private static final String ENONIC_CMS_NAMESPACE_PREFIX = "cms";
-
-    private org.springframework.extensions.jcr.JcrSessionFactory sessionFactory;
+    private JcrSessionFactory sessionFactory;
 
     private Resource compactNodeDefinitionFile;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private UserStoreService userstoreService;
+
+    @Autowired
+    private AccountJcrDao userJcrDao;
+
+    @Autowired
+    private JcrBootstrapImporter importer;
 
     public JcrBootstrap()
     {
     }
 
     private File homeDir;
-
-    private void resetLocalRepository()
-    {
-        if ( this.homeDir.exists() )
-        {
-            try
-            {
-                Files.deleteRecursively( this.homeDir );
-            }
-            catch ( IOException e )
-            {
-                // DO NOTHING
-            }
-        }
-    }
-
-    @Value("${cms.home}/jackrabbit")
-    public void setHomeDir( final File homeDir )
-    {
-        this.homeDir = homeDir;
-    }
 
     @PostConstruct
     public void afterPropertiesSet()
@@ -95,6 +88,14 @@ public final class JcrBootstrap
 
             jcrSession.save();
 
+            importer.importUserstores();
+
+            importer.importUsers();
+
+            LOG.info( JcrHelper.sessionViewToXml( jcrSession, "/enonic" ) );
+
+            jcrSession.save();
+
             print( jcrSession );
         }
         catch ( Exception e )
@@ -116,21 +117,18 @@ public final class JcrBootstrap
     {
         Node root = jcrSession.getRootNode();
 
-        if (root.hasNode( "enonic" )) {
-            LOG.info( "Skipping JCR tree structure initialization" );
-            return;
+        if ( root.hasNode( JcrCmsConstants.ROOT_NODE ) )
+        {
+            root.getNode( JcrCmsConstants.ROOT_NODE ).remove();
+            jcrSession.save();
         }
-        Node enonic = root.addNode( "enonic", "nt:unstructured" );
-        Node userstores = enonic.addNode( "userstores", "cms:userstores" );
+        Node enonic = root.addNode( JcrCmsConstants.ROOT_NODE, JcrConstants.NT_UNSTRUCTURED );
+        Node userstores = enonic.addNode( JcrCmsConstants.USERSTORES_NODE, JcrCmsConstants.USERSTORES_NODE_TYPE );
 
-        Node enonicUserstore = userstores.addNode( "enonic", "cms:userstore" );
-        Node enonicGroupsRoles = enonicUserstore.addNode( "groups", "cms:groups" );
-        Node enonicUsersRoles = enonicUserstore.addNode( "users", "cms:users" );
-
-        Node systemUserstore = userstores.addNode( "system", "cms:userstore" );
-        Node groupsRoles = systemUserstore.addNode( "groups", "cms:groups" );
-        Node usersRoles = systemUserstore.addNode( "users", "cms:users" );
-        Node systemRoles = systemUserstore.addNode( "roles", "cms:roles" );
+        Node systemUserstore = userstores.addNode( JcrCmsConstants.SYSTEM_USERSTORE_NODE, JcrCmsConstants.USERSTORE_NODE_TYPE );
+        Node groupsRoles = systemUserstore.addNode( JcrCmsConstants.GROUPS_NODE, JcrCmsConstants.GROUPS_NODE_TYPE );
+        Node usersRoles = systemUserstore.addNode( JcrCmsConstants.USERS_NODE, JcrCmsConstants.USERS_NODE_TYPE );
+        Node systemRoles = systemUserstore.addNode( JcrCmsConstants.ROLES_NODE, JcrCmsConstants.ROLES_NODE_TYPE );
 
         systemRoles.addNode( "ea", "cms:role" );
         systemRoles.addNode( "developer", "cms:role" );
@@ -169,7 +167,7 @@ public final class JcrBootstrap
         String[] prefixes = reg.getPrefixes();
         Set<String> registeredPrefixes = new HashSet( Arrays.<String>asList( prefixes ) );
 
-        registerNamespace( reg, registeredPrefixes, ENONIC_CMS_NAMESPACE_PREFIX, ENONIC_CMS_NAMESPACE );
+        registerNamespace( reg, registeredPrefixes, JcrCmsConstants.ENONIC_CMS_NAMESPACE_PREFIX, JcrCmsConstants.ENONIC_CMS_NAMESPACE );
     }
 
     private void registerNamespace( NamespaceRegistry reg, Set<String> registeredPrefixes, String prefix, String uri )
@@ -200,4 +198,26 @@ public final class JcrBootstrap
     {
         this.compactNodeDefinitionFile = compactNodeDefinitionFile;
     }
+
+    private void resetLocalRepository()
+    {
+        if ( this.homeDir.exists() )
+        {
+            try
+            {
+                Files.deleteRecursively( this.homeDir );
+            }
+            catch ( IOException e )
+            {
+                // DO NOTHING
+            }
+        }
+    }
+
+    @Value("${cms.home}/jackrabbit")
+    public void setHomeDir( final File homeDir )
+    {
+        this.homeDir = homeDir;
+    }
+
 }

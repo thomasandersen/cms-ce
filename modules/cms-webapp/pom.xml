@@ -40,7 +40,7 @@
                       <!-- See JSLint option list:  http://www.jslint.com/lint.html#options -->
                       <jslint options="browser,devel,plusplus,white,sloppy,vars,confusion"
                               haltOnFailure="false" >
-                          <predef>Ext,Utils,CMS</predef>
+                          <predef>Ext,CMS</predef>
                           <formatter type="plain" />
                           <fileset dir="${basedir}/src/main/webapp/admin"
                                    includes="**/*.js"
