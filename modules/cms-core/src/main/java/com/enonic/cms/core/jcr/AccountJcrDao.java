@@ -12,12 +12,15 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.ValueFactory;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.jcr.query.qom.Column;
 import javax.jcr.query.qom.Constraint;
+import javax.jcr.query.qom.DynamicOperand;
 import javax.jcr.query.qom.Ordering;
 import javax.jcr.query.qom.QueryObjectModel;
+import javax.jcr.query.qom.QueryObjectModelConstants;
 import javax.jcr.query.qom.QueryObjectModelFactory;
 import javax.jcr.query.qom.Selector;
 
@@ -37,6 +40,12 @@ import com.enonic.cms.domain.EntityPageList;
 import com.enonic.cms.domain.user.Gender;
 import com.enonic.cms.domain.user.UserInfo;
 
+import static com.enonic.cms.core.jcr.JcrCmsConstants.USERSTORES_ABSOLUTE_PATH;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.USERSTORES_PATH;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.USERS_NODE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.USER_NODE_TYPE;
+import static javax.jcr.query.qom.QueryObjectModelConstants.JCR_OPERATOR_EQUAL_TO;
+
 public class AccountJcrDao
     extends JcrDaoSupport
 {
@@ -44,12 +53,20 @@ public class AccountJcrDao
 
     public UserEntity findByKey( String key )
     {
-        return null;
+        return findByKey( new UserKey( key ) );
     }
 
-    public UserEntity findByKey( UserKey key )
+    public UserEntity findByKey( final UserKey key )
     {
-        return null;
+        UserEntity user = (UserEntity) getTemplate().execute( new JcrCallback()
+        {
+            public Object doInJcr( Session session )
+                throws IOException, RepositoryException
+            {
+                return queryUserByKey( session, key );
+            }
+        } );
+        return user;
     }
 
     public UserEntity findByQualifiedUsername( final QualifiedUsername qualifiedUsername )
@@ -77,9 +94,9 @@ public class AccountJcrDao
         QueryManager queryManager = session.getWorkspace().getQueryManager();
         QueryObjectModelFactory factory = queryManager.getQOMFactory();
 
-        Selector source = factory.selector( "cms:user", "userNodes" );
+        Selector source = factory.selector( USER_NODE_TYPE, "userNodes" );
         Column[] columns = null;
-        Constraint constraint = factory.descendantNode( "userNodes", JcrCmsConstants.USERSTORES_ABSOLUTE_PATH );
+        Constraint constraint = factory.descendantNode( "userNodes", USERSTORES_ABSOLUTE_PATH );
         Ordering[] orderings = null;
 
         QueryObjectModel queryObj = factory.createQuery( source, constraint, orderings, columns );
@@ -104,6 +121,41 @@ public class AccountJcrDao
         return new EntityPageList<UserEntity>( index, (int) nodeIterator.getSize(), userList );
     }
 
+    private UserEntity queryUserByKey( Session session, UserKey key )
+        throws RepositoryException
+    {
+        QueryManager queryManager = session.getWorkspace().getQueryManager();
+        QueryObjectModelFactory factory = queryManager.getQOMFactory();
+        ValueFactory vf = session.getValueFactory();
+
+        Selector source = factory.selector( USER_NODE_TYPE, "userNodes" );
+        Column[] columns = null;
+        Constraint constrUserstoresDescendant = factory.descendantNode( "userNodes", USERSTORES_ABSOLUTE_PATH );
+
+        Constraint constrUserKey = factory.comparison( factory.propertyValue( "userNodes", "key" ), JCR_OPERATOR_EQUAL_TO,
+                                                       factory.literal( vf.createValue( key.toString() ) ) );
+
+        Constraint constraint = factory.and( constrUserstoresDescendant, constrUserKey );
+
+        Ordering[] orderings = null;
+        QueryObjectModel queryObj = factory.createQuery( source, constraint, orderings, columns );
+        QueryResult result = queryObj.execute();
+
+        NodeIterator nodeIterator = result.getNodes();
+
+        LOG.info( nodeIterator.getSize() + " users found" );
+
+        UserEntity user = null;
+        if ( nodeIterator.hasNext() )
+        {
+            user = new UserEntity();
+            Node userNode = nodeIterator.nextNode();
+            nodePropertiesToUserFields( userNode, user );
+        }
+
+        return user;
+    }
+
     public void store( final UserEntity user )
     {
         getTemplate().execute( new JcrCallback()
@@ -124,9 +176,9 @@ public class AccountJcrDao
         throws RepositoryException
     {
         String userstoreNodeName = user.getUserStore().getName();
-        String userParentNodePath = JcrCmsConstants.USERSTORES_PATH + userstoreNodeName + "/" + JcrCmsConstants.USERS_NODE;
+        String userParentNodePath = USERSTORES_PATH + userstoreNodeName + "/" + USERS_NODE;
 
-        Node userNode = session.getRootNode().getNode( userParentNodePath ).addNode( user.getName(), JcrCmsConstants.USER_NODE_TYPE );
+        Node userNode = session.getRootNode().getNode( userParentNodePath ).addNode( user.getName(), USER_NODE_TYPE );
         userFieldsToNode( user, userNode );
     }
 
@@ -201,10 +253,10 @@ public class AccountJcrDao
             user.setTimestamp( timestamp );
         }
 
-        UserStoreEntity userstore = new UserStoreEntity( );
+        UserStoreEntity userstore = new UserStoreEntity();
         userstore.setName( "demo" );
-        userstore.setKey( new UserStoreKey(123 ) );
-        user.setUserStore(  userstore);
+        userstore.setKey( new UserStoreKey( 123 ) );
+        user.setUserStore( userstore );
     }
 
     private Calendar toCalendar( Date date )

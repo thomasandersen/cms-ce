@@ -70,7 +70,8 @@ public final class UsersResource
             throw new NotFoundException();
         }
 
-        final UserEntity entity = this.userDao.findByKey( key );
+//        final UserEntity entity = this.userDao.findByKey( key );
+        final UserEntity entity = this.userJcrDao.findByKey( key );
         if ( entity == null )
         {
             throw new NotFoundException();

@@ -31,6 +31,20 @@ import com.google.common.io.Files;
 import com.enonic.cms.core.security.userstore.UserStoreService;
 import com.enonic.cms.store.dao.UserDao;
 
+import static com.enonic.cms.core.jcr.JcrCmsConstants.ENONIC_CMS_NAMESPACE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.ENONIC_CMS_NAMESPACE_PREFIX;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.GROUPS_NODE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.GROUPS_NODE_TYPE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.ROLES_NODE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.ROLES_NODE_TYPE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.ROOT_NODE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.SYSTEM_USERSTORE_NODE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.USERSTORES_NODE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.USERSTORES_NODE_TYPE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.USERSTORE_NODE_TYPE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.USERS_NODE;
+import static com.enonic.cms.core.jcr.JcrCmsConstants.USERS_NODE_TYPE;
+
 public class JcrBootstrap
 {
     private static final Logger LOG = LoggerFactory.getLogger( JcrBootstrap.class );
@@ -117,18 +131,18 @@ public class JcrBootstrap
     {
         Node root = jcrSession.getRootNode();
 
-        if ( root.hasNode( JcrCmsConstants.ROOT_NODE ) )
+        if ( root.hasNode( ROOT_NODE ) )
         {
-            root.getNode( JcrCmsConstants.ROOT_NODE ).remove();
+            root.getNode( ROOT_NODE ).remove();
             jcrSession.save();
         }
-        Node enonic = root.addNode( JcrCmsConstants.ROOT_NODE, JcrConstants.NT_UNSTRUCTURED );
-        Node userstores = enonic.addNode( JcrCmsConstants.USERSTORES_NODE, JcrCmsConstants.USERSTORES_NODE_TYPE );
+        Node enonic = root.addNode( ROOT_NODE, JcrConstants.NT_UNSTRUCTURED );
+        Node userstores = enonic.addNode( USERSTORES_NODE, USERSTORES_NODE_TYPE );
 
-        Node systemUserstore = userstores.addNode( JcrCmsConstants.SYSTEM_USERSTORE_NODE, JcrCmsConstants.USERSTORE_NODE_TYPE );
-        Node groupsRoles = systemUserstore.addNode( JcrCmsConstants.GROUPS_NODE, JcrCmsConstants.GROUPS_NODE_TYPE );
-        Node usersRoles = systemUserstore.addNode( JcrCmsConstants.USERS_NODE, JcrCmsConstants.USERS_NODE_TYPE );
-        Node systemRoles = systemUserstore.addNode( JcrCmsConstants.ROLES_NODE, JcrCmsConstants.ROLES_NODE_TYPE );
+        Node systemUserstore = userstores.addNode( SYSTEM_USERSTORE_NODE, USERSTORE_NODE_TYPE );
+        Node groupsRoles = systemUserstore.addNode( GROUPS_NODE, GROUPS_NODE_TYPE );
+        Node usersRoles = systemUserstore.addNode( USERS_NODE, USERS_NODE_TYPE );
+        Node systemRoles = systemUserstore.addNode( ROLES_NODE, ROLES_NODE_TYPE );
 
         systemRoles.addNode( "ea", "cms:role" );
         systemRoles.addNode( "developer", "cms:role" );
@@ -167,7 +181,7 @@ public class JcrBootstrap
         String[] prefixes = reg.getPrefixes();
         Set<String> registeredPrefixes = new HashSet( Arrays.<String>asList( prefixes ) );
 
-        registerNamespace( reg, registeredPrefixes, JcrCmsConstants.ENONIC_CMS_NAMESPACE_PREFIX, JcrCmsConstants.ENONIC_CMS_NAMESPACE );
+        registerNamespace( reg, registeredPrefixes, ENONIC_CMS_NAMESPACE_PREFIX, ENONIC_CMS_NAMESPACE );
     }
 
     private void registerNamespace( NamespaceRegistry reg, Set<String> registeredPrefixes, String prefix, String uri )
