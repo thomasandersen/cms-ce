@@ -18,6 +18,10 @@
   <!-- Enable if jcr is needed. -->
   <context:component-scan base-package="com.enonic.cms.core.jcr"/>
 
+  <bean id="jdbcUserImporterDao" class="com.enonic.cms.core.jcr.JdbcUserImporterDao">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
   <!-- configuring the default repository -->
   <bean id="repository" class="org.springframework.extensions.jcr.jackrabbit.RepositoryFactoryBean">
     <property name="configuration" value="classpath:/META-INF/jackrabbit/repository.xml"/>

@@ -243,7 +243,10 @@ public class AccountJcrDao
     {
         user.setName( userNode.getName() );
         user.setDisplayName( userNode.getProperty( "displayname" ).getString() );
-        user.setEmail( userNode.getProperty( "email" ).getString() );
+        if ( userNode.hasProperty( "email" ) )
+        {
+            user.setEmail( userNode.getProperty( "email" ).getString() );
+        }
         user.setKey( new UserKey( userNode.getProperty( "key" ).getString() ) );
 
         Calendar lastmodified = userNode.getProperty( "lastModified" ).getDate();
@@ -253,10 +256,13 @@ public class AccountJcrDao
             user.setTimestamp( timestamp );
         }
 
-        UserStoreEntity userstore = new UserStoreEntity();
-        userstore.setName( "demo" );
-        userstore.setKey( new UserStoreKey( 123 ) );
-        user.setUserStore( userstore );
+        UserStoreEntity userstore = user.getUserStore();
+        if ( userstore != null )
+        {
+            userstore.setName( "demo" );
+            userstore.setKey( new UserStoreKey( 123 ) );
+            user.setUserStore( userstore );
+        }
     }
 
     private Calendar toCalendar( Date date )

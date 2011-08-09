@@ -30,6 +30,11 @@ public class JcrBootstrapImporter
     @Autowired
     private UserstoreJcrDao userstoreJcrDao;
 
+
+    @Autowired
+    private JdbcUserImporterDao jdbcUserImporterDao;
+
+
     public JcrBootstrapImporter()
     {
     }
@@ -60,7 +65,8 @@ public class JcrBootstrapImporter
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void importUsers()
     {
-        List<UserEntity> users = this.userDao.findAll( false );
+        List<UserEntity> users = jdbcUserImporterDao.getUsers();
+//        List<UserEntity> users = this.userDao.findAll( false );
 
         int usersImported = 0;
         for ( UserEntity user : users )
