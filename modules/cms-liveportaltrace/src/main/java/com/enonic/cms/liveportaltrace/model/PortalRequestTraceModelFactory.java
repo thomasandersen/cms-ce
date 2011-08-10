@@ -56,6 +56,10 @@ public class PortalRequestTraceModelFactory
         {
             return PortalRequestTraceType.Attachment;
         }
+        else if ( type.equals( "I" ) )
+        {
+            return PortalRequestTraceType.Image;
+        }
         else
         {
             return PortalRequestTraceType.Unknown;

@@ -5,7 +5,6 @@ public enum PortalRequestTraceType
     Page,
     Window,
     Attachment,
-    Resource,
-    Error,
+    Image,
     Unknown
 }
