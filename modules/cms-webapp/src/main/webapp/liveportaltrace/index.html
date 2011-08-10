@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>Enonic CMS Live Portal Trace</title>
+    <link rel="stylesheet" type="text/css" href="../admin/ext/resources/css/ext-all.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/main.css">
+    <script type="text/javascript" src="../admin/ext/ext-all.js"></script>
+    <script type="text/javascript" src="OpenLayers/OpenLayers.js"></script>
+    <script type="text/javascript">
+
+        Ext.Loader.setConfig({
+            enabled: true,
+            disableCaching: false
+        });
+
+        Ext.application({
+            name: 'LPT',
+            appFolder: 'app',
+
+            controllers: [
+                'Requests'
+            ],
+
+            requires: [
+                'LPT.view.requests.PortalRequestTraceHistoryPanel',
+                'LPT.view.requests.FilterPanel',
+                'LPT.view.MainTabPanel'
+            ],
+
+            launch: function() {
+                Ext.create('Ext.container.Viewport', {
+                    layout: 'border',
+                    padding: 5,
+
+                    items: [
+                        {
+                            region: 'center',
+                            xtype: 'mainTabPanel'
+                        },
+                        {
+                            region: 'west',
+                            width: 225,
+                            xtype: 'requestsFilterPanel'
+                        }
+                    ]
+                });
+            }
+
+        });
+
+    </script>
+</head>
+<body></body>
+</html>

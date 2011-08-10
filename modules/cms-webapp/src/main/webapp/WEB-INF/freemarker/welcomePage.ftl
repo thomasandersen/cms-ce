@@ -70,6 +70,12 @@
         <li>Java - ${baseUrl}rpc/bin</li>
     </ul>
 </div>
+<div class="infoBox">
+    <b>Live Portal Trace</b>
+    <ul>
+        <li><a href="/liveportaltrace/index.html">Live Portal Trace</a></li>
+    </ul>
+</div>
 
 </body>
 </html>

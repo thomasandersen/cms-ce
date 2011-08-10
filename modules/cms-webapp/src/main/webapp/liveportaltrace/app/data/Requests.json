@@ -1,0 +1,37 @@
+{
+    "total": 40,
+    "users": [
+        {
+            "id": "1",
+            "type": "Page",
+            "user": "enonic\\adriaanb",
+            "url": "/site/0/home",
+            "time": "2009-12-08 10:58:43",
+            "requester": "127.0.0.1"
+        },
+        {
+            "id": "2",
+            "type": "Page",
+            "user": "enonic\\akselnh",
+            "url": "/site/0/articles",
+            "time": "2009-12-08 10:58:43",
+            "requester": "127.0.0.1"
+        },
+        {
+            "id": "3",
+            "type": "Page",
+            "user": "enonic\\akselnh",
+            "url": "/site/0/page2",
+            "time": "2009-12-08 10:58:43",
+            "requester": "127.0.0.1"
+        },
+        {
+            "id": "4",
+            "type": "Portlet",
+            "user": "enonic\\alexands",
+            "url": "/site/0/page3",
+            "time": "2009-12-08 10:58:43",
+            "requester": "127.0.0.1"
+        }
+    ]
+}

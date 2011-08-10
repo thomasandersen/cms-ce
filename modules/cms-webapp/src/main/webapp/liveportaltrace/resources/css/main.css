@@ -1,0 +1,63 @@
+
+.request-info {
+    padding: 10px;
+}
+
+.request-info img {
+    float: right;
+}
+
+.request-info h3 {
+    font-size: 24px;
+    font-weight: normal;
+}
+
+.request-info dl {
+    float: left;
+    padding: 10px;
+    width: 50%;
+    font-size: 12px;
+}
+
+.request-info dl dt {
+    float:left;
+    font-style: italic;
+    width: 120px;
+}
+
+.request-info dl dd {
+
+}
+
+.x-btn .request-details, .request-details
+{
+    background-image: url("../images/details_bottom.gif");
+}
+
+
+
+.status-info {
+    padding: 10px;
+}
+
+.status-info h3 {
+    font-size: 24px;
+    font-weight: normal;
+}
+
+.status-info dl {
+    float: left;
+    padding: 10px;
+    width: 50%;
+    font-size: 12px;
+}
+
+.status-info dl dt {
+    float:left;
+    font-style: italic;
+    width: 120px;
+}
+
+.request-info dl dd {
+
+}

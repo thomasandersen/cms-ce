@@ -36,6 +36,7 @@
         <module>modules/cms-api</module>
         <module>modules/cms-core</module>
         <module>modules/cms-admin</module>
+        <module>modules/cms-liveportaltrace</module>
         <module>modules/cms-itest</module>
         <module>modules/cms-webapp</module>
         <module>modules/cms-distro</module>
@@ -416,6 +417,22 @@
                 <groupId>javax.jcr</groupId>
                 <artifactId>jcr</artifactId>
                 <version>2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>3.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>1.7.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
