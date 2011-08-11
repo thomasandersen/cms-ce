@@ -68,7 +68,7 @@ public class JdbcUserImporterDao
     public UserStoreEntity getUserStore( UserStoreKey userStoreKey )
     {
         String query = "SELECT DOM_LKEY, DOM_BISDELETED, DOM_SNAME, DOM_BDEFAULTSTORE, DOM_SCONFIGNAME, DOM_XMLDATA " +
-            "FROM TDOMAIN WHERE DOM_BISDELETED = ?";
+            "FROM TDOMAIN WHERE DOM_LKEY = ?";
 
         List<UserStoreEntity> userStore = jdbcTemplate.query( query, new RowMapper<UserStoreEntity>()
         {

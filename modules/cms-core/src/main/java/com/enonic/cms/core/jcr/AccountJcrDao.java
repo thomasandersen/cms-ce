@@ -256,13 +256,16 @@ public class AccountJcrDao
             user.setTimestamp( timestamp );
         }
 
-        UserStoreEntity userstore = user.getUserStore();
-        if ( userstore != null )
-        {
-            userstore.setName( "demo" );
-            userstore.setKey( new UserStoreKey( 123 ) );
-            user.setUserStore( userstore );
-        }
+        UserStoreEntity userstore = new UserStoreEntity();
+        nodeToUserstore( userNode.getParent().getParent(), userstore );
+        user.setUserStore( userstore );
+    }
+
+    private void nodeToUserstore( Node userStoreNode, UserStoreEntity userStoreEntity )
+        throws RepositoryException
+    {
+        userStoreEntity.setName( userStoreNode.getName() );
+        userStoreEntity.setKey( new UserStoreKey( userStoreNode.getProperty( "cms:key" ).getString() ) );
     }
 
     private Calendar toCalendar( Date date )

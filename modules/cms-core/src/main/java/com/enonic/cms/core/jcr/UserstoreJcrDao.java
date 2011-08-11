@@ -46,6 +46,7 @@ public class UserstoreJcrDao
         String userstoreNodeName = userstore.getName();
         Node userstoresNode = session.getRootNode().getNode( JcrCmsConstants.USERSTORES_PATH );
         Node userstoreNode = userstoresNode.addNode( userstoreNodeName, JcrCmsConstants.USERSTORE_NODE_TYPE );
+        userstoreNode.setProperty( "cms:key", userstore.getKey().toString() );
 
         Node enonicGroupsRoles = userstoreNode.addNode( JcrCmsConstants.GROUPS_NODE, JcrCmsConstants.GROUPS_NODE_TYPE );
         Node enonicUsersRoles = userstoreNode.addNode( JcrCmsConstants.USERS_NODE, JcrCmsConstants.USERS_NODE_TYPE );

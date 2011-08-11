@@ -6,6 +6,7 @@
 // principal
 [cms:principal] > cms:base abstract
 - cms:displayname (string)
+- cms:key (string)
 
 // user
 [cms:user] > cms:principal, nt:unstructured
@@ -19,6 +20,7 @@
 
 // userstore
 [cms:userstore] > cms:base
+- cms:key (string)
 + roles (cms:roles)
 + groups (cms:groups) mandatory
 + users (cms:users) mandatory
