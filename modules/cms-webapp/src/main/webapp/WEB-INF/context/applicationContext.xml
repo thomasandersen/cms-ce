@@ -18,34 +18,11 @@
   <!-- Enable if jcr is needed. -->
   <context:component-scan base-package="com.enonic.cms.core.jcr"/>
 
-  <bean id="jdbcUserImporterDao" class="com.enonic.cms.core.jcr.JdbcUserImporterDao">
-    <property name="dataSource" ref="dataSource"/>
-  </bean>
-
   <!-- configuring the default repository -->
   <bean id="repository" class="org.springframework.extensions.jcr.jackrabbit.RepositoryFactoryBean">
     <property name="configuration" value="classpath:/META-INF/jackrabbit/repository.xml"/>
     <property name="homeDir" value="${cms.home}/jackrabbit"/>
   </bean>
-
-
-  <!-- DAV repository -->
-  <bean id="remoteDavJcrRepositoryFactory" class="org.apache.jackrabbit.jcr2dav.Jcr2davRepositoryFactory"/>
-
-  <!-- Connect to remote JCR repository, expects CRX server running locally -->
-  <!--bean id="repository" class="org.springframework.extensions.jcr.jackrabbit.RepositoryFactoryBean"
-        factory-bean="remoteDavJcrRepositoryFactory" factory-method="getRepository">
-    <constructor-arg type="java.util.Map">
-      <util:map>
-        <entry>
-          <key>
-            <util:constant static-field="org.apache.jackrabbit.commons.JcrUtils.REPOSITORY_URI"/>
-          </key>
-          <value>http://localhost:7402/crx/server</value>
-        </entry>
-      </util:map>
-    </constructor-arg>
-  </bean-->
 
   <bean id="jcrSessionFactory" class="org.springframework.extensions.jcr.JcrSessionFactory">
     <property name="repository" ref="repository"/>
@@ -67,18 +44,10 @@
     <property name="template" ref="jcrTemplate"/>
   </bean>
 
-  <bean id="userstorejcrDao" class="com.enonic.cms.core.jcr.UserstoreJcrDao">
+  <bean id="jcrAccountsImporter" class="com.enonic.cms.core.jcr.JcrAccountsImporter">
     <property name="sessionFactory" ref="jcrSessionFactory"/>
     <property name="template" ref="jcrTemplate"/>
   </bean>
-
-  <!--bean id="jcrService" parent="txProxyTemplate">
-    <property name="target">
-      <bean class="com.enonic.cms.core.jcr.AccountDaoJcrImpl">
-        <property name="template" ref="jcrTemplate"/>
-      </bean>
-    </property>
-  </bean-->
 
   <bean id="jcrBootstrap" class="com.enonic.cms.core.jcr.JcrBootstrap">
     <property name="sessionFactory" ref="jcrSessionFactory"/>
@@ -93,8 +62,6 @@
       </bean>
     </property>
   </bean>
-
-  <bean id="jcrBootstrapImporter" class="com.enonic.cms.core.jcr.JcrBootstrapImporter"/>
 
   <!-- JCR TRANSACTIONS -->
   <bean id="jcrTransactionManager"

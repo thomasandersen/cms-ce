@@ -28,9 +28,6 @@ import org.springframework.extensions.jcr.JcrSessionFactory;
 
 import com.google.common.io.Files;
 
-import com.enonic.cms.core.security.userstore.UserStoreService;
-import com.enonic.cms.store.dao.UserDao;
-
 import static com.enonic.cms.core.jcr.JcrCmsConstants.ENONIC_CMS_NAMESPACE;
 import static com.enonic.cms.core.jcr.JcrCmsConstants.ENONIC_CMS_NAMESPACE_PREFIX;
 import static com.enonic.cms.core.jcr.JcrCmsConstants.GROUPS_NODE;
@@ -53,36 +50,20 @@ public class JcrBootstrap
 
     private Resource compactNodeDefinitionFile;
 
-    @Autowired
-    private UserDao userDao;
+    private File homeDir;
 
     @Autowired
-    private UserStoreService userstoreService;
-
-    @Autowired
-    private AccountJcrDao userJcrDao;
-
-    @Autowired
-    private JcrBootstrapImporter importer;
+    private JcrAccountsImporter jcrAccountsImporter;
 
     public JcrBootstrap()
     {
     }
-
-    private File homeDir;
 
     @PostConstruct
     public void afterPropertiesSet()
         throws Exception
     {
         initialize();
-    }
-
-    private void print( Session jcrSession )
-        throws RepositoryException
-    {
-        Node root = jcrSession.getRootNode();
-        JcrHelper.printNode( root );
     }
 
     public void initialize()
@@ -102,15 +83,12 @@ public class JcrBootstrap
 
             jcrSession.save();
 
-            importer.importUserstores();
+            jcrAccountsImporter.importAccounts();
 
-            importer.importUsers();
-
+            // log imported tree
             LOG.info( JcrHelper.sessionViewToXml( jcrSession, "/enonic" ) );
 
             jcrSession.save();
-
-            print( jcrSession );
         }
         catch ( Exception e )
         {
@@ -164,7 +142,6 @@ public class JcrBootstrap
             {
                 LOG.info( "Registered node type: " + nt.getName() );
             }
-
         }
         catch ( Exception e )
         {

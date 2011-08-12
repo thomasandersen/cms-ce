@@ -14,7 +14,6 @@ import com.sun.jersey.api.core.InjectParam;
 
 import com.enonic.cms.core.jcr.AccountJcrDao;
 import com.enonic.cms.core.security.user.UserEntity;
-import com.enonic.cms.store.dao.UserDao;
 
 import com.enonic.cms.domain.EntityPageList;
 
@@ -23,9 +22,6 @@ import com.enonic.cms.domain.EntityPageList;
 @Produces("application/json")
 public final class UsersResource
 {
-    @Autowired
-    private UserDao userDao;
-
     @Autowired
     private AccountJcrDao userJcrDao;
 
@@ -36,9 +32,6 @@ public final class UsersResource
     @Path("list")
     public UsersModel getAll( @InjectParam final UserLoadRequest req )
     {
-//        final EntityPageList<UserEntity> list =
-//            this.userDao.findAll( req.getStart(), req.getLimit(), req.buildHqlQuery(), req.buildHqlOrder() );
-
         final EntityPageList<UserEntity> list =
             userJcrDao.findAll( req.getStart(), req.getLimit(), req.buildHqlQuery(), req.buildHqlOrder() );
 
@@ -59,8 +52,10 @@ public final class UsersResource
     public byte[] getPhoto( @QueryParam("key") final String key, @QueryParam("thumb") @DefaultValue("false") final boolean thumb )
         throws Exception
     {
-        final UserEntity entity = findEntity( key );
-        return this.photoService.renderPhoto( entity, thumb ? 40 : 100 );
+        final byte[] photo = userJcrDao.findUserPhotoByKey( key );
+        return this.photoService.renderPhoto( photo, thumb ? 40 : 100 );
+//        final UserEntity entity = findEntity( key );
+//        return this.photoService.renderPhoto( entity, thumb ? 40 : 100 );
     }
 
     private UserEntity findEntity( final String key )
@@ -70,7 +65,6 @@ public final class UsersResource
             throw new NotFoundException();
         }
 
-//        final UserEntity entity = this.userDao.findByKey( key );
         final UserEntity entity = this.userJcrDao.findByKey( key );
         if ( entity == null )
         {

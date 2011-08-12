@@ -12,14 +12,14 @@
 [cms:user] > cms:principal, nt:unstructured
 
 // group
-[cms:group] > cms:principal
+[cms:group] > cms:principal, nt:unstructured
 + members (cms:users) multiple
 
 // role
 [cms:role] > cms:group
 
 // userstore
-[cms:userstore] > cms:base
+[cms:userstore] > cms:base, nt:unstructured
 - cms:key (string)
 + roles (cms:roles)
 + groups (cms:groups) mandatory

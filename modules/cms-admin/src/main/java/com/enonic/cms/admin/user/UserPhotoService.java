@@ -27,6 +27,14 @@ public final class UserPhotoService
         return toBytes(sizedImage);
     }
 
+    public byte[] renderPhoto(final byte[] photoData, final int size)
+        throws Exception
+    {
+        final BufferedImage image = createImage(photoData);
+        final BufferedImage sizedImage = resizeImage(image, size);
+        return toBytes(sizedImage);
+    }
+
     private BufferedImage toBufferedImage(final byte[] data)
         throws Exception
     {
