@@ -87,7 +87,7 @@ Ext.define('CMS.view.launcher.Toolbar', {
                     {
                         id: 80,
                         text: 'Live Portal Trace',
-                        appUrl: 'blank.html',
+                        appUrl: '../liveportaltrace/index.html',
                         icon: 'resources/images/utilities-system-monitor.png'
                     }
                 ]
