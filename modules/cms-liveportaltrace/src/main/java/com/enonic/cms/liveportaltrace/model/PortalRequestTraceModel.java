@@ -1,6 +1,6 @@
 package com.enonic.cms.liveportaltrace.model;
 
-public final class PortalRequestTraceModel
+public class PortalRequestTraceModel
 {
     private long id;
 

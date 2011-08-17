@@ -20,7 +20,8 @@ Ext.define('LPT.view.requests.PortalRequestTraceHistoryPanel', {
                 region: 'south',
                 xtype: 'portalRequestTraceHistoryDetailsPanel',
                 flex: 1,
-                hidden: true
+                hidden: true,
+                split: true
             }
         ];
 

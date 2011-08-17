@@ -1,9 +1,24 @@
 Ext.define('LPT.controller.Requests', {
     extend: 'Ext.app.Controller',
 
-    stores: ['PortalRequestTraceHistoryListStore', 'GeolocationStore', 'StatusInfo'],
-    models: ['PortalRequestTraceModel', 'GeolocationModel', 'StatusInfo'],
-    views: ['requests.PortalRequestTraceHistoryGrid', 'requests.FilterPanel', 'requests.PortalRequestTraceHistoryPanel', 'requests.PortalRequestTraceHistoryDetailsPanel', 'requests.ContextMenu'],
+    stores: [
+        'PortalRequestTraceHistoryListStore',
+        'PortalRequestTraceHistoryDetailsStore' ,
+        'GeolocationStore',
+        'StatusInfo'
+    ],
+    models: [
+        'PortalRequestTraceModel',
+        'GeolocationModel',
+        'StatusInfo'
+    ],
+    views: [
+        'requests.PortalRequestTraceHistoryGrid',
+        'requests.FilterPanel',
+        'requests.PortalRequestTraceHistoryPanel',
+        'requests.PortalRequestTraceHistoryDetailsPanel',
+        'requests.ContextMenu'
+    ],
 
     refs: [
         {ref: 'portalRequestTraceHistoryGrid', selector: 'portalRequestTraceHistoryGrid'},
@@ -58,11 +73,16 @@ Ext.define('LPT.controller.Requests', {
     },
 
     showRequestDetails: function (selectedRequest) {
+
+        console.log( selectedRequest.data.id );
+
         var detailsTab = this.getPortalRequestTraceHistoryDetailsPanel();
-        detailsTab.setTitle(this.getRequestTitleForTab(selectedRequest.data));
-        detailsTab.update(selectedRequest.data);
+
+        console.log( "detailsTab", detailsTab );
+
         detailsTab.setVisible(true);
-        detailsTab.expand(true);
+
+        detailsTab.store.setRootNode( {id: selectedRequest.data.id});
     },
 
     startAutoRefreshTimer: function () {

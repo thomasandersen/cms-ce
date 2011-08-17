@@ -7,7 +7,7 @@ Ext.define('LPT.store.PortalRequestTraceHistoryListStore', {
     autoLoad: true,
 
     proxy: Ext.create('LPT.store.PortalRequestTraceHistoryListProxy', {
-        url: '/liveportaltrace/rest/portal-request-trace-history-list',
+        url: '/liveportaltrace/rest/portal-request-trace-history/list',
         reader: {
             type: 'json',
             root: 'requests',

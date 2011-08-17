@@ -7,20 +7,15 @@ import com.enonic.cms.portal.livetrace.PortalRequestTrace;
 
 public class PortalRequestTraceModelFactory
 {
+    public static void paintModel( PortalRequestTraceModel model, PastPortalRequestTrace pastPortalRequestTrace )
+    {
+        doPaintModel( model, pastPortalRequestTrace );
+    }
 
     public static PortalRequestTraceModel createModel( final PastPortalRequestTrace pastPortalRequestTrace )
     {
-        final PortalRequestTrace portalRequestTrace = pastPortalRequestTrace.getPortalRequestTrace();
-
         final PortalRequestTraceModel model = new PortalRequestTraceModel();
-        model.setId( pastPortalRequestTrace.getHistoryRecordNumber() );
-        model.setSite( SiteModel.create( portalRequestTrace ) );
-        model.setUrl( URLModel.create( portalRequestTrace ) );
-        model.setRemoteAddress( portalRequestTrace.getHttpRequestRemoteAddress() );
-        model.setUsername( portalRequestTrace.getRequester().toString() );
-        model.setRequestType( toPortalRequestType( portalRequestTrace.getType() ) );
-        model.setDuration( DurationModel.create( portalRequestTrace.getDuration() ) );
-
+        doPaintModel( model, pastPortalRequestTrace );
         return model;
     }
 
@@ -40,6 +35,19 @@ public class PortalRequestTraceModelFactory
         PortalRequestTraceListModel model = new PortalRequestTraceListModel();
         model.setTotal( total );
         return model;
+    }
+
+    private static void doPaintModel( PortalRequestTraceModel model, PastPortalRequestTrace pastPortalRequestTrace )
+    {
+        final PortalRequestTrace portalRequestTrace = pastPortalRequestTrace.getPortalRequestTrace();
+
+        model.setId( pastPortalRequestTrace.getHistoryRecordNumber() );
+        model.setSite( SiteModel.create( portalRequestTrace ) );
+        model.setUrl( URLModel.create( portalRequestTrace ) );
+        model.setRemoteAddress( portalRequestTrace.getHttpRequestRemoteAddress() );
+        model.setUsername( portalRequestTrace.getRequester().toString() );
+        model.setRequestType( toPortalRequestType( portalRequestTrace.getType() ) );
+        model.setDuration( DurationModel.create( portalRequestTrace.getDuration() ) );
     }
 
     private static PortalRequestTraceType toPortalRequestType( String type )
@@ -65,4 +73,6 @@ public class PortalRequestTraceModelFactory
             return PortalRequestTraceType.Unknown;
         }
     }
+
+
 }
