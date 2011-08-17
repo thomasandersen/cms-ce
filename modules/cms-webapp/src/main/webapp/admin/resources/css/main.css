@@ -50,6 +50,33 @@
     border: 0
 }
 
+
+/* ----- Logged in user panel -----*/
+
+.logged-in-user-panel {
+    box-shadow: 5px 5px 5px #ccc;
+}
+
+.logged-in-user-panel-body {
+    padding: 10px;
+}
+
+.logged-in-user-panel-left {
+    float: left;
+    margin-right: 15px;
+}
+
+.logged-in-user-panel-left img {
+}
+
+.logged-in-user-panel-right h1 {
+    font-size: 18px !important;
+}
+
+.logged-in-user-panel-right {
+    float: left;
+}
+
 /* ----- Accounts -----*/
 
 img.thumbnail {
@@ -153,12 +180,17 @@ img.photo {
     background-image: url("../images/group_add.png");
 }
 
+.icon-group {
+    background-image: url("../images/group.png");
+}
+
 .icon-edit-user {
     background-image: url("../images/user_edit.png");
 }
 
 .icon-delete-user {
     background-image: url("../images/user_delete.png");
+    background-position: center;
 }
 
 .icon-change-password {
@@ -182,7 +214,7 @@ img.photo {
 }
 
 .icon-settings {
-    background-image: url("../images/cog.png");
+    background-image: url("../images/xfce-system-settings.png");
 }
 
 .icon-log-out {
@@ -215,7 +247,7 @@ img.photo {
 
 .icon-delete {
     /*background-image: url("../images/delete.png");*/
-    background-image: url("../images/bin.png");
+    background-image: url("../images/cross.png");
 }
 
 .icon-new {
@@ -233,6 +265,7 @@ img.photo {
 .icon-cancel {
     background: url("../images/cancel.png") no-repeat;
 }
+
 /*-----  Dashboard  -----*/
 
 .dashboard .dashboard-body {
@@ -283,3 +316,52 @@ img.photo {
 .userstore-info .x-toolbar {
     border-width: 1px !important;
 }
+
+.display-name-readonly input {
+    font-weight: bold;
+}
+
+.display-name input {
+    border: none;
+    font-size: 35px;
+    text-align: left;
+    background: none;
+}
+
+.display-name div {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.x-form-display-field {
+    padding-left: 5px;
+    padding-top: 3px;
+}
+
+.group-display{
+    background: #d3d3d3;
+    cursor: auto !important;
+}
+
+.group-display button{
+    cursor: auto !important;
+}
+
+/*------    Cache   ---------*/
+
+.cache-info h1 {
+    margin: 0;
+}
+.cache-info h1 span {
+    font-size: 13px;
+    font-style: normal;
+    margin-left: 10px;
+}
+
+.item-icon {
+    cursor: pointer;
+    background: url("../images/chart_curve.png") no-repeat ;
+    padding-left: 20px;
+    height: 20px;
+}
+
