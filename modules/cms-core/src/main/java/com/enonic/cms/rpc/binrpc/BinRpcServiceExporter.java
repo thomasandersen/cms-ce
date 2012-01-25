@@ -71,7 +71,6 @@ public final class BinRpcServiceExporter
         }
         else
         {
-            /* test */
             res.sendError( HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Only POST is allowed" );
         }
 
